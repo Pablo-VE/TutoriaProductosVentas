@@ -45,6 +45,9 @@
             <Image url="@../resources/pali.png" />
          </image>
       </ImageView>
-      <Label fx:id="lblNombreUsuario" layoutX="720.0" layoutY="11.0" prefHeight="37.0" prefWidth="112.0" />
+      <Label fx:id="lblNombreUsuario" layoutX="730.0" layoutY="9.0" prefHeight="37.0" prefWidth="112.0" textAlignment="RIGHT">
+         <font>
+            <Font name="System Bold" size="15.0" />
+         </font></Label>
    </children>
 </AnchorPane>

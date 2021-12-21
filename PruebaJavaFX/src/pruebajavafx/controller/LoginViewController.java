@@ -46,6 +46,8 @@ public class LoginViewController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
         usuario1 = new Usuario("pablove", "Pablo Venegas", "1234");
         usuario2 = new Usuario("elizab", "Elizabeth Ortiz", "123");
+        txtUsuario.setText("pablove");
+        txtPassword.setText("1234");
     }    
 
     @FXML

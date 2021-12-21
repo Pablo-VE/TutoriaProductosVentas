@@ -53,6 +53,8 @@ public class HelloWorldController implements Initializable {
 
     @FXML
     private void actGoInicio(ActionEvent event) {
+        spContenedor.getChildren().clear();
+        spContenedor.getChildren().add(apInicio);
     }
 
     @FXML
