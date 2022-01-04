@@ -6,7 +6,7 @@
 package pruebajavafx.services;
 
 import java.util.ArrayList;
-import pruebajavafx.models.Producto;
+import pruebajavafx.dto.Producto;
 import pruebajavafx.utils.AppContext;
 
 /**

@@ -15,7 +15,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
-import pruebajavafx.models.Producto;
+import pruebajavafx.dto.Producto;
 import pruebajavafx.services.ProductoService;
 import pruebajavafx.utils.AppContext;
 import pruebajavafx.utils.Mensaje;

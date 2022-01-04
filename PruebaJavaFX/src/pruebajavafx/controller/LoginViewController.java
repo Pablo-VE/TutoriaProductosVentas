@@ -18,9 +18,12 @@ import javafx.scene.control.Button;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
-import pruebajavafx.models.Usuario;
+import pruebajavafx.dto.Usuario;
+import pruebajavafx.dto.UsuariosDto;
+import pruebajavafx.services.UsuariosService;
 import pruebajavafx.utils.AppContext;
 import pruebajavafx.utils.Mensaje;
+import pruebajavafx.utils.Respuesta;
 
 /**
  * FXML Controller class
@@ -36,16 +39,14 @@ public class LoginViewController implements Initializable {
     @FXML
     private Button btnIngresar;
     
-    private Usuario usuario1;
-    private Usuario usuario2;
+    private UsuariosService usuariosService;    
     
     /**
      * Initializes the controller class.
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        usuario1 = new Usuario("pablove", "Pablo Venegas", "1234", "admin");
-        usuario2 = new Usuario("elizab", "Elizabeth Ortiz", "123", "particular");
+        usuariosService = new UsuariosService();
         txtUsuario.setText("pablove");
         txtPassword.setText("1234");
     }    
@@ -61,25 +62,19 @@ public class LoginViewController implements Initializable {
             if(password.isEmpty()){
                 Mensaje.showAndWait(Alert.AlertType.WARNING, "Campo vacío", "Por favor, digita la contraseña");
             }else{
-                boolean loginU1 = usuario1.compareUser(user, password);
-                if(loginU1){
-                    Mensaje.showAndWait(Alert.AlertType.INFORMATION, "Inicio de sesión exitoso", "Bienvenid@ "+usuario1.getNombre());
-                    Ingresar(usuario1);
-                }else{
-                   boolean loginU2 = usuario2.compareUser(user, password);
-                   if(loginU2){
-                       Mensaje.showAndWait(Alert.AlertType.INFORMATION, "Inicio de sesión exitoso", "Bienvenid@ "+usuario2.getNombre());
-                       Ingresar(usuario2);
-                   }else{
-                       Mensaje.showAndWait(Alert.AlertType.ERROR, "Opps :(", "Usuario o contraseña incorrectos");
-                   }
-                }
+                Respuesta res = usuariosService.getUsuarioByNombreUsuario(user, password);
+                Mensaje.showAndWait(Alert.AlertType.INFORMATION, res.getMensaje(), res.getMensajeInterno());
+                if(res.getEstado()){
+                    Ingresar((UsuariosDto) res.getResultado("Usuario"));
+                }       
             }
         }
         
     }
     
-    private void Ingresar(Usuario usuario){
+    private void Ingresar(UsuariosDto usuario){
+        
+        
         
         AppContext.getInstance().set("usuarioLogeado", usuario);
         

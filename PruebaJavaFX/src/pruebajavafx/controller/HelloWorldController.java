@@ -16,7 +16,8 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.StackPane;
-import pruebajavafx.models.Usuario;
+import pruebajavafx.dto.Usuario;
+import pruebajavafx.dto.UsuariosDto;
 import pruebajavafx.utils.AppContext;
 
 /**
@@ -46,8 +47,8 @@ public class HelloWorldController implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        Usuario usuario = (Usuario) AppContext.getInstance().get("usuarioLogeado");
-        lblNombreUsuario.setText(usuario.getNombre());
+        UsuariosDto usuario = (UsuariosDto) AppContext.getInstance().get("usuarioLogeado");
+        lblNombreUsuario.setText(usuario.getUsuNombre());
         // TODO
     }    
 

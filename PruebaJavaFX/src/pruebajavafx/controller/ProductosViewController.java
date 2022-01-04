@@ -30,8 +30,9 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 import javafx.util.Callback;
-import pruebajavafx.models.Producto;
-import pruebajavafx.models.Usuario;
+import pruebajavafx.dto.Producto;
+import pruebajavafx.dto.Usuario;
+import pruebajavafx.dto.UsuariosDto;
 import pruebajavafx.services.ProductoService;
 import pruebajavafx.utils.AppContext;
 import pruebajavafx.utils.Mensaje;
@@ -63,9 +64,9 @@ public class ProductosViewController implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        rolUsuario = ((Usuario) AppContext.getInstance().get("usuarioLogeado")).getRol();
+        rolUsuario = ((UsuariosDto) AppContext.getInstance().get("usuarioLogeado")).getUsuRol();
                 
-        if(!rolUsuario.equals("admin")){
+        if(!rolUsuario.equals("A")){
             btnAgregar.setDisable(true);
             btnAgregar.setVisible(false);
         }
