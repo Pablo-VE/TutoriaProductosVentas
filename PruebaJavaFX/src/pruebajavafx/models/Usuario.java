@@ -13,14 +13,16 @@ public class Usuario {
     private String usuario;
     private String nombre;
     private String password;
+    private String rol;
 
     public Usuario() {
     }
 
-    public Usuario(String usuario, String nombre, String password) {
+    public Usuario(String usuario, String nombre, String password, String rol) {
         this.usuario = usuario;
         this.nombre = nombre;
         this.password = password;
+        this.rol = rol;
     }
 
     public String getUsuario() {
@@ -45,6 +47,14 @@ public class Usuario {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public String getRol() {
+        return rol;
+    }
+
+    public void setRol(String rol) {
+        this.rol = rol;
     }
     
     public boolean compareUser(String usuario, String password){

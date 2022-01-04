@@ -44,8 +44,8 @@ public class LoginViewController implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        usuario1 = new Usuario("pablove", "Pablo Venegas", "1234");
-        usuario2 = new Usuario("elizab", "Elizabeth Ortiz", "123");
+        usuario1 = new Usuario("pablove", "Pablo Venegas", "1234", "admin");
+        usuario2 = new Usuario("elizab", "Elizabeth Ortiz", "123", "particular");
         txtUsuario.setText("pablove");
         txtPassword.setText("1234");
     }    

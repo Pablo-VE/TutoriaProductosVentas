@@ -55,26 +55,7 @@ public class AppContext {
     }
 
     public Object get(String parameter){
-        
-        Object object = context.get(parameter);
-//        if(object == null && parameter.contains("Service"))
-//        {
-//            synchronized (AppContext.class) {
-//                object = context.get(parameter);
-//                if (object == null) {
-//                    try {
-//                        try {
-//                            object = Class.forName("unaplanilla2.service."+parameter).newInstance();
-//                            context.put(parameter, object);
-//                        } catch (InstantiationException | IllegalAccessException ex) {
-//                            java.util.logging.Logger.getLogger(AppContext.class.getName()).log(Level.SEVERE, "Creando Service [" + parameter + "].", ex);
-//                        }
-//                    } catch (ClassNotFoundException ex) {
-//                        java.util.logging.Logger.getLogger(AppContext.class.getName()).log(Level.SEVERE, "Creando Service [" + parameter + "].", ex);
-//                    }
-//                }
-//            } 
-//        }        
+        Object object = context.get(parameter);        
         return object;
     }
 

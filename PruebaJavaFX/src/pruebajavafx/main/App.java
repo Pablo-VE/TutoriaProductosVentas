@@ -17,6 +17,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
+import pruebajavafx.services.ProductoService;
 
 /**
  *
@@ -26,6 +27,8 @@ public class App extends Application{
 
     @Override
     public void start(Stage stage) throws IOException {
+        ProductoService productoService = new ProductoService();
+        productoService.initializeProductos();
         Parent root = FXMLLoader.load(getClass().getResource("../views/LoginView.fxml"));
         Scene scene = new Scene(root);
         stage.setScene(scene);
