@@ -16,7 +16,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import pruebajavafx.dto.Producto;
-import pruebajavafx.services.ProductoService;
+import pruebajavafx.services.ProductosService;
 import pruebajavafx.utils.AppContext;
 import pruebajavafx.utils.Mensaje;
 
@@ -42,7 +42,7 @@ public class ProductosEditarController implements Initializable {
     
     private String modalidad;
 
-    private ProductoService productoService;
+    private ProductosService productoService;
     
     private ProductosViewController productosViewController;
     
@@ -52,7 +52,7 @@ public class ProductosEditarController implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        productoService = new ProductoService();
+        productoService = new ProductosService();
     }  
     
     public void EstablecerModalidad(String modalidad){
@@ -88,14 +88,14 @@ public class ProductosEditarController implements Initializable {
             if(txtNombre.getText().isEmpty() || txtCantidad.getText().isEmpty() || txtPrecio.getText().isEmpty()){
                 Mensaje.showAndWait(Alert.AlertType.WARNING, "Opps", "Hay campos vacíos");
             }else{
-                boolean isCreated = productoService.create(txtNombre.getText(), Integer.parseInt(txtCantidad.getText()) , Float.parseFloat(txtPrecio.getText()));
-                if(isCreated){
-                    productosViewController.cargarTabla(productoService.getAll());
-                    closeStage();
-                    Mensaje.show(Alert.AlertType.INFORMATION, "Producto creado", "Producto "+txtNombre.getText()+" ha sido creado de manera exitosa");
-                }else{
-                    Mensaje.show(Alert.AlertType.ERROR, "Opps", "Error al crear producto");
-                }
+//                boolean isCreated = productoService.create(txtNombre.getText(), Integer.parseInt(txtCantidad.getText()) , Float.parseFloat(txtPrecio.getText()));
+//                if(isCreated){
+//                    productosViewController.cargarTabla(productoService.getAll());
+//                    closeStage();
+//                    Mensaje.show(Alert.AlertType.INFORMATION, "Producto creado", "Producto "+txtNombre.getText()+" ha sido creado de manera exitosa");
+//                }else{
+//                    Mensaje.show(Alert.AlertType.ERROR, "Opps", "Error al crear producto");
+//                }
             }
         }else{
             if(txtNombre.getText().isEmpty() || txtCantidad.getText().isEmpty() || txtPrecio.getText().isEmpty()){
@@ -104,14 +104,14 @@ public class ProductosEditarController implements Initializable {
                 productoAEditar.setNombre(txtNombre.getText());
                 productoAEditar.setCantidad(Integer.parseInt(txtCantidad.getText()));
                 productoAEditar.setPrecio(Float.parseFloat(txtPrecio.getText()));
-                boolean isEdited = productoService.edit(productoAEditar.getId(), productoAEditar);
-                if(isEdited){
-                    productosViewController.cargarTabla(productoService.getAll());
-                    closeStage();
-                    Mensaje.show(Alert.AlertType.INFORMATION, "Producto editado", "Producto "+txtNombre.getText()+" ha sido actualizado de manera exitosa");
-                }else{
-                    Mensaje.show(Alert.AlertType.ERROR, "Opps", "Error al editar producto");
-                }
+//                boolean isEdited = productoService.edit(productoAEditar.getId(), productoAEditar);
+//                if(isEdited){
+//                    productosViewController.cargarTabla(productoService.getAll());
+//                    closeStage();
+//                    Mensaje.show(Alert.AlertType.INFORMATION, "Producto editado", "Producto "+txtNombre.getText()+" ha sido actualizado de manera exitosa");
+//                }else{
+//                    Mensaje.show(Alert.AlertType.ERROR, "Opps", "Error al editar producto");
+//                }
             }
         }
     }

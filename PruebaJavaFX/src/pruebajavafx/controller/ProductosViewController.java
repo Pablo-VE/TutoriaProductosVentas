@@ -9,6 +9,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Optional;
 import java.util.ResourceBundle;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -31,9 +32,10 @@ import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 import pruebajavafx.dto.Producto;
+import pruebajavafx.dto.ProductosDto;
 import pruebajavafx.dto.Usuario;
 import pruebajavafx.dto.UsuariosDto;
-import pruebajavafx.services.ProductoService;
+import pruebajavafx.services.ProductosService;
 import pruebajavafx.utils.AppContext;
 import pruebajavafx.utils.Mensaje;
 
@@ -53,9 +55,9 @@ public class ProductosViewController implements Initializable {
     @FXML
     private Button btnAgregar;
     @FXML
-    private TableView<Producto> tvProductos;
+    private TableView<ProductosDto> tvProductos;
     
-    private ProductoService productoService;
+    private ProductosService productosService;
     
     private String rolUsuario;
 
@@ -71,40 +73,41 @@ public class ProductosViewController implements Initializable {
             btnAgregar.setVisible(false);
         }
                 
-        productoService = new ProductoService();
-        cargarTabla(productoService.getAll());
-        // TODO
+        productosService = new ProductosService();
+        ArrayList<ProductosDto> productos = new ArrayList<ProductosDto>();
+        productos = (ArrayList<ProductosDto>) (productosService.getProductosByNombre("")).getResultado("Productos");
+        cargarTabla(productos);
     }    
 
     @FXML
     private void actBuscar(ActionEvent event) {
-        cargarTabla(productoService.getByNombre(txtFilter.getText()));
+        cargarTabla((ArrayList<ProductosDto>) (productosService.getProductosByNombre(txtFilter.getText())).getResultado("Productos"));
     }
     
-    public void cargarTabla(ArrayList<Producto> productos){
+    public void cargarTabla(ArrayList<ProductosDto> productos){
         tvProductos.getColumns().clear();
         if(!productos.isEmpty()){
             
             ObservableList items = FXCollections.observableArrayList(productos);
             
-            TableColumn <Producto, Integer> colId = new TableColumn("ID");
-            colId.setCellValueFactory(new PropertyValueFactory("id"));
+            TableColumn <ProductosDto, SimpleStringProperty> colId = new TableColumn("ID");
+            colId.setCellValueFactory(new PropertyValueFactory("proId"));
             
-            TableColumn <Producto, String> colNombre = new TableColumn("Nombre");
-            colNombre.setCellValueFactory(new PropertyValueFactory("nombre"));
+            TableColumn <ProductosDto, SimpleStringProperty> colNombre = new TableColumn("Nombre");
+            colNombre.setCellValueFactory(new PropertyValueFactory("proNombre"));
             
-            TableColumn <Producto, Integer> colCantidad = new TableColumn("Cantidad");
-            colCantidad.setCellValueFactory(new PropertyValueFactory("cantidad"));
+            TableColumn <ProductosDto, SimpleStringProperty> colCantidad = new TableColumn("Cantidad");
+            colCantidad.setCellValueFactory(new PropertyValueFactory("proCantidad"));
             
-            TableColumn <Producto, Float> colPrecio = new TableColumn("Precio");
-            colPrecio.setCellValueFactory(new PropertyValueFactory("precio"));
+            TableColumn <ProductosDto, SimpleStringProperty> colPrecio = new TableColumn("Precio");
+            colPrecio.setCellValueFactory(new PropertyValueFactory("proPrecio"));
             
             tvProductos.getColumns().addAll(colId);
             tvProductos.getColumns().addAll(colNombre);
             tvProductos.getColumns().addAll(colCantidad);
             tvProductos.getColumns().addAll(colPrecio);
             
-            if(rolUsuario.equals("admin")){
+            if(rolUsuario.equals("A")){
                 addButtonToTable();
             }
             
@@ -113,12 +116,12 @@ public class ProductosViewController implements Initializable {
     }
     
     private void addButtonToTable() {
-        TableColumn<Producto, Void> colBtn = new TableColumn("Acciones");
+        TableColumn<ProductosDto, Void> colBtn = new TableColumn("Acciones");
 
-        Callback<TableColumn<Producto, Void>, TableCell<Producto, Void>> cellFactory = new Callback<TableColumn<Producto, Void>, TableCell<Producto, Void>>() {
+        Callback<TableColumn<ProductosDto, Void>, TableCell<ProductosDto, Void>> cellFactory = new Callback<TableColumn<ProductosDto, Void>, TableCell<ProductosDto, Void>>() {
             @Override
-            public TableCell<Producto, Void> call(final TableColumn<Producto, Void> param) {
-                final TableCell<Producto, Void> cell = new TableCell<Producto, Void>() {
+            public TableCell<ProductosDto, Void> call(final TableColumn<ProductosDto, Void> param) {
+                final TableCell<ProductosDto, Void> cell = new TableCell<ProductosDto, Void>() {
                     private final Button btn = new Button("Editar");
                     {
                         btn.setOnAction((ActionEvent event) -> {
@@ -166,7 +169,7 @@ public class ProductosViewController implements Initializable {
         
     }
     
-    private void abrirProductosEditar(String modalidad, Producto productoEditar){
+    private void abrirProductosEditar(String modalidad, ProductosDto productoEditar){
         try{
             FXMLLoader loader = new FXMLLoader(getClass().getResource("../views/ProductosEditar.fxml"));
             Parent root = loader.load();
@@ -175,7 +178,7 @@ public class ProductosViewController implements Initializable {
             productosEditarController.EstablecerModalidad(modalidad);
             productosEditarController.setProductosViewController(this);
             if(modalidad.equals("Editar")){
-                productosEditarController.setProductoAEditar(productoEditar);
+//                productosEditarController.setProductoAEditar(productoEditar);
             }
                     
             Scene scene = new Scene(root);
@@ -189,22 +192,22 @@ public class ProductosViewController implements Initializable {
         }
     }
     
-    public void eliminarProducto(Producto producto){
+    public void eliminarProducto(ProductosDto producto){
         
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setHeaderText(null);
         alert.setTitle("Eliminar Producto");
-        alert.setContentText("¿Esta seguro de ELIMINAR el producto: "+producto.getNombre()+"?");
+        alert.setContentText("¿Esta seguro de ELIMINAR el producto: "+producto.getProNombre()+"?");
         Optional<ButtonType> action = alert.showAndWait();
-        if (action.get() == ButtonType.OK) {
-            boolean isRemoved = productoService.delete(producto.getId());
-            if(isRemoved){
-                cargarTabla(productoService.getAll());
-                Mensaje.show(Alert.AlertType.INFORMATION, "Producto eliminado", "Producto ha sido eliminado de manera exitosa");
-            }else{
-                Mensaje.show(Alert.AlertType.ERROR, "Opps", "Error al eliminar producto");
-            }
-        }
+//        if (action.get() == ButtonType.OK) {
+//            boolean isRemoved = productoService.delete(producto.getId());
+//            if(isRemoved){
+//                cargarTabla(productoService.getAll());
+//                Mensaje.show(Alert.AlertType.INFORMATION, "Producto eliminado", "Producto ha sido eliminado de manera exitosa");
+//            }else{
+//                Mensaje.show(Alert.AlertType.ERROR, "Opps", "Error al eliminar producto");
+//            }
+//        }
     }
     
 }
