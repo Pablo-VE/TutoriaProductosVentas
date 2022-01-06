@@ -19,10 +19,10 @@ public class ProductosDto {
     private SimpleStringProperty proCantidad;
 
     public ProductosDto() {
-        proId = new SimpleStringProperty();
-        proNombre = new SimpleStringProperty();
-        proPrecio = new SimpleStringProperty();
-        proCantidad = new SimpleStringProperty();
+        this.proId = new SimpleStringProperty();
+        this.proNombre = new SimpleStringProperty();
+        this.proPrecio = new SimpleStringProperty();
+        this.proCantidad = new SimpleStringProperty();
     }
 
     public ProductosDto(Long proId, String proNombre, Float proPrecio, int proCantidad) {
@@ -34,14 +34,14 @@ public class ProductosDto {
     
     public ProductosDto(PvProductos producto) {
         this();
-        proId.set(String.valueOf(producto.getProId()));
-        proNombre.set(producto.getProNombre());
-        proPrecio.set(String.valueOf(producto.getProPrecio()));
-        proCantidad.set(String.valueOf(producto.getProCantidad()));
+        this.proId.set(String.valueOf(producto.getProId()));
+        this.proNombre.set(producto.getProNombre());
+        this.proPrecio.set(String.valueOf(producto.getProPrecio()));
+        this.proCantidad.set(String.valueOf(producto.getProCantidad()));
     }
 
     public Long getProId() {
-        return Long.valueOf(proId.get());
+        return Long.valueOf(this.proId.get());
     }
 
     public void setProId(Long proId) {
@@ -72,6 +72,10 @@ public class ProductosDto {
         this.proCantidad.set(String.valueOf(proCantidad));
     }
     
+    @Override
+    public String toString() {
+        return "proId=" + proId + " - proNombre=" + proNombre + " - proPrecio=" + proPrecio + " - proCantidad=" + proCantidad;
+    }
     
     
 }

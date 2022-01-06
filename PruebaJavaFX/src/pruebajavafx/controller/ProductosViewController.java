@@ -74,14 +74,18 @@ public class ProductosViewController implements Initializable {
         }
                 
         productosService = new ProductosService();
-        ArrayList<ProductosDto> productos = new ArrayList<ProductosDto>();
-        productos = (ArrayList<ProductosDto>) (productosService.getProductosByNombre("")).getResultado("Productos");
-        cargarTabla(productos);
+        cargarTablaConTodosLosRegistros();
     }    
 
     @FXML
     private void actBuscar(ActionEvent event) {
         cargarTabla((ArrayList<ProductosDto>) (productosService.getProductosByNombre(txtFilter.getText())).getResultado("Productos"));
+    }
+    
+    public void cargarTablaConTodosLosRegistros(){
+        ArrayList<ProductosDto> productos = new ArrayList<ProductosDto>();
+        productos = (ArrayList<ProductosDto>) (productosService.getProductosByNombre("")).getResultado("Productos");
+        cargarTabla(productos);
     }
     
     public void cargarTabla(ArrayList<ProductosDto> productos){
@@ -178,7 +182,7 @@ public class ProductosViewController implements Initializable {
             productosEditarController.EstablecerModalidad(modalidad);
             productosEditarController.setProductosViewController(this);
             if(modalidad.equals("Editar")){
-//                productosEditarController.setProductoAEditar(productoEditar);
+                productosEditarController.setProductoAEditar(productoEditar);
             }
                     
             Scene scene = new Scene(root);

@@ -37,4 +37,32 @@ public class ProductosService {
         return new Respuesta(true, "", "", "Productos", productos);  
     }
     
+    public Respuesta saveProducto(ProductosDto productoDto){
+        try{
+            et = em.getTransaction();
+            et.begin();
+            System.out.println(productoDto.toString());
+            PvProductos productoBd;
+            if(productoDto.getProId() != null && productoDto.getProId() > 0){ //si el id es diferente de nulo
+                //editarlo
+                productoBd = em.find(PvProductos.class, productoDto.getProId());
+                if(productoBd == null){
+                    return new Respuesta(false, "No se pudo modificar el registro", "Id no existe en la base de datos");
+                }
+                productoBd.Modificar(productoDto);
+                productoBd = em.merge(productoBd);
+            }else{
+                //agregarlo
+                productoBd = new PvProductos(productoDto);
+                em.persist(productoBd);
+            }
+            et.commit();
+            return new Respuesta(true, "", "", "Producto", new ProductosDto(productoBd));
+        }catch(Exception ex){
+            et.rollback();
+            System.out.println(ex);
+            return new Respuesta(false, "No se pudo guardar el registro", "");
+        }
+    }
+    
 }

@@ -20,6 +20,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
+import pruebajavafx.dto.ProductosDto;
 
 /**
  *
@@ -57,6 +58,11 @@ public class PvProductos implements Serializable {
     public PvProductos() {
     }
 
+    public PvProductos(ProductosDto producto) {
+        this.proId = BigDecimal.valueOf(producto.getProId());
+        Modificar(producto);
+    }
+    
     public PvProductos(BigDecimal proId) {
         this.proId = proId;
     }
@@ -131,7 +137,13 @@ public class PvProductos implements Serializable {
 
     @Override
     public String toString() {
-        return "pruebajavafx.model.PvProductos[ proId=" + proId + " ]";
+        return "proId=" + proId + " - proNombre=" + proNombre + " - proPrecio=" + proPrecio + " - proCantidad=" + proCantidad;
+    }
+    
+    public void Modificar(ProductosDto producto){
+        proNombre = producto.getProNombre();
+        proCantidad = BigInteger.valueOf(producto.getProCantidad());
+        proPrecio = BigDecimal.valueOf(producto.getProPrecio()).toBigInteger();    
     }
     
 }

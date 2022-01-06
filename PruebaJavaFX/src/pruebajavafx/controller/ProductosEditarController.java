@@ -16,9 +16,11 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import pruebajavafx.dto.Producto;
+import pruebajavafx.dto.ProductosDto;
 import pruebajavafx.services.ProductosService;
 import pruebajavafx.utils.AppContext;
 import pruebajavafx.utils.Mensaje;
+import pruebajavafx.utils.Respuesta;
 
 /**
  * FXML Controller class
@@ -42,17 +44,17 @@ public class ProductosEditarController implements Initializable {
     
     private String modalidad;
 
-    private ProductosService productoService;
+    private ProductosService productosService;
     
     private ProductosViewController productosViewController;
     
-    private Producto productoAEditar;
+    private ProductosDto productoAEditar;
     /**
      * Initializes the controller class.
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        productoService = new ProductosService();
+        productosService = new ProductosService();
     }  
     
     public void EstablecerModalidad(String modalidad){
@@ -69,11 +71,11 @@ public class ProductosEditarController implements Initializable {
         productosViewController = controller;
     }
 
-    public void setProductoAEditar(Producto productoAEditar) {
+    public void setProductoAEditar(ProductosDto productoAEditar) {
         this.productoAEditar = productoAEditar;
-        txtNombre.setText(productoAEditar.getNombre());
-        txtPrecio.setText(String.valueOf(productoAEditar.getPrecio()));
-        txtCantidad.setText(String.valueOf(productoAEditar.getCantidad()));
+        txtNombre.setText(productoAEditar.getProNombre());
+        txtPrecio.setText(String.valueOf(productoAEditar.getProPrecio()));
+        txtCantidad.setText(String.valueOf(productoAEditar.getProCantidad()));
     }
 
     @FXML
@@ -88,30 +90,36 @@ public class ProductosEditarController implements Initializable {
             if(txtNombre.getText().isEmpty() || txtCantidad.getText().isEmpty() || txtPrecio.getText().isEmpty()){
                 Mensaje.showAndWait(Alert.AlertType.WARNING, "Opps", "Hay campos vacíos");
             }else{
-//                boolean isCreated = productoService.create(txtNombre.getText(), Integer.parseInt(txtCantidad.getText()) , Float.parseFloat(txtPrecio.getText()));
-//                if(isCreated){
-//                    productosViewController.cargarTabla(productoService.getAll());
-//                    closeStage();
-//                    Mensaje.show(Alert.AlertType.INFORMATION, "Producto creado", "Producto "+txtNombre.getText()+" ha sido creado de manera exitosa");
-//                }else{
-//                    Mensaje.show(Alert.AlertType.ERROR, "Opps", "Error al crear producto");
-//                }
+                ProductosDto pro = new ProductosDto();
+                pro.setProId(Long.valueOf(-1));
+                pro.setProNombre(txtNombre.getText());
+                pro.setProCantidad(Integer.valueOf(txtCantidad.getText()));
+                pro.setProPrecio(Float.valueOf(txtPrecio.getText()));
+                Respuesta res = productosService.saveProducto(pro);
+                if(res.getEstado()){
+                    closeStage();
+                    Mensaje.showAndWait(Alert.AlertType.INFORMATION, "Registro de Producto", "Se ha registrado el producto exitosamente");
+                    productosViewController.cargarTablaConTodosLosRegistros();
+                }else{
+                    Mensaje.showAndWait(Alert.AlertType.INFORMATION, "Registro de Producto", "Ocurrio un error al registrar el producto");
+                }
             }
         }else{
             if(txtNombre.getText().isEmpty() || txtCantidad.getText().isEmpty() || txtPrecio.getText().isEmpty()){
                 Mensaje.showAndWait(Alert.AlertType.WARNING, "Opps", "Hay campos vacíos");
             }else{
-                productoAEditar.setNombre(txtNombre.getText());
-                productoAEditar.setCantidad(Integer.parseInt(txtCantidad.getText()));
-                productoAEditar.setPrecio(Float.parseFloat(txtPrecio.getText()));
-//                boolean isEdited = productoService.edit(productoAEditar.getId(), productoAEditar);
-//                if(isEdited){
-//                    productosViewController.cargarTabla(productoService.getAll());
-//                    closeStage();
-//                    Mensaje.show(Alert.AlertType.INFORMATION, "Producto editado", "Producto "+txtNombre.getText()+" ha sido actualizado de manera exitosa");
-//                }else{
-//                    Mensaje.show(Alert.AlertType.ERROR, "Opps", "Error al editar producto");
-//                }
+                productoAEditar.setProNombre(txtNombre.getText());
+                productoAEditar.setProCantidad(Integer.parseInt(txtCantidad.getText()));
+                productoAEditar.setProPrecio(Float.parseFloat(txtPrecio.getText()));
+                
+                Respuesta res = productosService.saveProducto(productoAEditar);
+                if(res.getEstado()){
+                    closeStage();
+                    Mensaje.showAndWait(Alert.AlertType.INFORMATION, "Registro de Producto", "Se ha registrado el producto exitosamente");
+                    productosViewController.cargarTablaConTodosLosRegistros();
+                }else{
+                    Mensaje.showAndWait(Alert.AlertType.INFORMATION, "Registro de Producto", "Ocurrio un error al registrar el producto");
+                }
             }
         }
     }
