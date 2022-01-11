@@ -18,7 +18,6 @@ import javafx.scene.control.Button;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
-import pruebajavafx.dto.Usuario;
 import pruebajavafx.dto.UsuariosDto;
 import pruebajavafx.services.UsuariosService;
 import pruebajavafx.utils.AppContext;

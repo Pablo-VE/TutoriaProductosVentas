@@ -74,7 +74,8 @@ public class ProductosDto {
     
     @Override
     public String toString() {
-        return "proId=" + proId + " - proNombre=" + proNombre + " - proPrecio=" + proPrecio + " - proCantidad=" + proCantidad;
+//        return "proId=" + proId + " - proNombre=" + proNombre + " - proPrecio=" + proPrecio + " - proCantidad=" + proCantidad;
+        return proNombre.get();
     }
     
     

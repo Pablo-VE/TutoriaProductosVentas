@@ -5,7 +5,6 @@
  */
 package pruebajavafx.controller;
 
-import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
@@ -17,7 +16,6 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.StackPane;
-import pruebajavafx.dto.Usuario;
 import pruebajavafx.dto.UsuariosDto;
 import pruebajavafx.utils.AppContext;
 
@@ -73,6 +71,14 @@ public class HelloWorldController implements Initializable {
 
     @FXML
     private void actGoVentas(ActionEvent event) {
+        try{
+            Parent root = FXMLLoader.load(getClass().getResource("../views/VentasView.fxml"));
+            spContenedor.getChildren().clear();
+            spContenedor.getChildren().add(root);
+            spContenedor.getChildren().remove(apInicio);
+        }catch(Exception e){
+            System.out.println("Error: Controller - HelloWorldController - actGoVentas");
+        }
     }
     
 }
