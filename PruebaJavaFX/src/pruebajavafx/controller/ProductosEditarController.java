@@ -114,9 +114,9 @@ public class ProductosEditarController implements Initializable {
                 
                 Respuesta res = productosService.saveProducto(productoAEditar);
                 if(res.getEstado()){
-                    closeStage();
-                    Mensaje.showAndWait(Alert.AlertType.INFORMATION, "Registro de Producto", "Se ha registrado el producto exitosamente");
                     productosViewController.cargarTablaConTodosLosRegistros();
+                    closeStage();
+                    Mensaje.showAndWait(Alert.AlertType.INFORMATION, "Registro de Producto", "Se ha editado el producto exitosamente"); 
                 }else{
                     Mensaje.showAndWait(Alert.AlertType.INFORMATION, "Registro de Producto", "Ocurrio un error al registrar el producto");
                 }

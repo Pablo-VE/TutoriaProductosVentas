@@ -15,7 +15,7 @@
             <Font name="System Bold" size="16.0" />
          </font>
       </Label>
-      <TextField fx:id="txtFilter" layoutX="31.0" layoutY="72.0" prefHeight="36.0" prefWidth="511.0" />
+      <TextField fx:id="txtFilter" layoutX="31.0" layoutY="72.0" onKeyPressed="#actBuscar2" prefHeight="36.0" prefWidth="511.0" />
       <Button fx:id="btnBuscar" layoutX="558.0" layoutY="72.0" mnemonicParsing="false" onAction="#actBuscar" prefHeight="36.0" prefWidth="104.0" text="BUSCAR">
          <font>
             <Font name="System Bold" size="15.0" />

@@ -27,6 +27,8 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
@@ -38,6 +40,7 @@ import pruebajavafx.dto.UsuariosDto;
 import pruebajavafx.services.ProductosService;
 import pruebajavafx.utils.AppContext;
 import pruebajavafx.utils.Mensaje;
+import pruebajavafx.utils.Respuesta;
 
 /**
  * FXML Controller class
@@ -75,7 +78,10 @@ public class ProductosViewController implements Initializable {
                 
         productosService = new ProductosService();
         cargarTablaConTodosLosRegistros();
+        
+
     }    
+
 
     @FXML
     private void actBuscar(ActionEvent event) {
@@ -197,21 +203,27 @@ public class ProductosViewController implements Initializable {
     }
     
     public void eliminarProducto(ProductosDto producto){
-        
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setHeaderText(null);
         alert.setTitle("Eliminar Producto");
         alert.setContentText("¿Esta seguro de ELIMINAR el producto: "+producto.getProNombre()+"?");
         Optional<ButtonType> action = alert.showAndWait();
-//        if (action.get() == ButtonType.OK) {
-//            boolean isRemoved = productoService.delete(producto.getId());
-//            if(isRemoved){
-//                cargarTabla(productoService.getAll());
-//                Mensaje.show(Alert.AlertType.INFORMATION, "Producto eliminado", "Producto ha sido eliminado de manera exitosa");
-//            }else{
-//                Mensaje.show(Alert.AlertType.ERROR, "Opps", "Error al eliminar producto");
-//            }
-//        }
+        if (action.get() == ButtonType.OK) {
+            Respuesta res = productosService.deleteProducto(producto.getProId());
+            if(res.getEstado()){
+                cargarTablaConTodosLosRegistros();
+                Mensaje.show(Alert.AlertType.INFORMATION, "Producto eliminado", "Producto ha sido eliminado de manera exitosa");
+            }else{
+                Mensaje.show(Alert.AlertType.INFORMATION, res.getMensaje(), res.getMensajeInterno());
+            }
+        }
+    }
+
+    @FXML
+    private void actBuscar2(KeyEvent event) {
+        if(event.getCode() == KeyCode.ENTER){
+            cargarTabla((ArrayList<ProductosDto>) (productosService.getProductosByNombre(txtFilter.getText())).getResultado("Productos"));
+        }
     }
     
 }

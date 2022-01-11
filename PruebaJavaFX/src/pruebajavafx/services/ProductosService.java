@@ -5,6 +5,7 @@
  */
 package pruebajavafx.services;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
@@ -41,11 +42,10 @@ public class ProductosService {
         try{
             et = em.getTransaction();
             et.begin();
-            System.out.println(productoDto.toString());
             PvProductos productoBd;
             if(productoDto.getProId() != null && productoDto.getProId() > 0){ //si el id es diferente de nulo
                 //editarlo
-                productoBd = em.find(PvProductos.class, productoDto.getProId());
+                productoBd = em.find(PvProductos.class, BigDecimal.valueOf(productoDto.getProId()));
                 if(productoBd == null){
                     return new Respuesta(false, "No se pudo modificar el registro", "Id no existe en la base de datos");
                 }
@@ -62,6 +62,31 @@ public class ProductosService {
             et.rollback();
             System.out.println(ex);
             return new Respuesta(false, "No se pudo guardar el registro", "");
+        }
+    }
+    
+    public Respuesta deleteProducto(Long id){
+        try{
+            et = em.getTransaction();
+            et.begin();
+            PvProductos productoBd;
+            if(id != null && id > 0){ 
+                productoBd = em.find(PvProductos.class, BigDecimal.valueOf(id));
+                if(productoBd == null){
+                    et.rollback();
+                    return new Respuesta(false, "Eliminar registro", "No se encontro el producto a eliminar");
+                }
+                em.remove(productoBd);
+            }else{
+                et.rollback();
+                return new Respuesta(false, "Eliminar registro", "Debe cargar el producto a eliminar");
+            }
+            et.commit();
+            return new Respuesta(true, "", "");
+        }catch(Exception ex){
+            et.rollback();
+            System.out.println(ex);
+            return new Respuesta(false, "No se pudo eliminar el registro", "");
         }
     }
     
