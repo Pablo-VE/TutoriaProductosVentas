@@ -1,1 +1,4 @@
 /PruebaJavaFX/dist/
+/PruebaJavaFX/build
+PruebaJavaFX/src/META-INF/persistence.xml
+PruebaJavaFX/build/built-jar.properties
