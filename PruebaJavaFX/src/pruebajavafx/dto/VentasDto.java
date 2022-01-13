@@ -5,7 +5,6 @@
  */
 package pruebajavafx.dto;
 
-import java.time.Instant;
 import java.util.Date;
 import javafx.beans.property.SimpleStringProperty;
 import pruebajavafx.model.PvVentas;

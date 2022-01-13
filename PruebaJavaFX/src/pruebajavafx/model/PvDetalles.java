@@ -11,13 +11,17 @@ import java.math.BigInteger;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlRootElement;
+import pruebajavafx.dto.DetallesDto;
 
 /**
  *
@@ -36,6 +40,8 @@ public class PvDetalles implements Serializable {
     private static final long serialVersionUID = 1L;
     // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
     @Id
+    @SequenceGenerator(name = "ID_PV_DETALLES_GENERATOR", sequenceName = "SEC_PV_DETALLES", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "ID_PV_DETALLES_GENERATOR") 
     @Basic(optional = false)
     @Column(name = "DET_ID")
     private BigDecimal detId;
@@ -63,6 +69,13 @@ public class PvDetalles implements Serializable {
         this.detId = detId;
         this.detCantidad = detCantidad;
         this.detPrecio = detPrecio;
+    }
+    
+    public PvDetalles(DetallesDto detalle) {
+        if(detalle.getDetId() > 0){
+            this.detId = BigDecimal.valueOf(detalle.getDetId());
+        }
+        Modificar(detalle);
     }
 
     public BigDecimal getDetId() {
@@ -128,6 +141,13 @@ public class PvDetalles implements Serializable {
     @Override
     public String toString() {
         return "pruebajavafx.model.PvDetalles[ detId=" + detId + " ]";
+    }
+    
+    public void Modificar(DetallesDto detalle){
+        this.detCantidad = BigInteger.valueOf(detalle.getDetCantidad());
+        this.detPrecio = BigDecimal.valueOf(detalle.getDetPrecio()).toBigInteger();
+        this.detProducto = new PvProductos(detalle.getDetProducto());
+        this.detVenta = new PvVentas(detalle.getDetVenta());
     }
     
 }

@@ -5,8 +5,6 @@
  */
 package pruebajavafx.controller;
 
-import java.math.BigDecimal;
-import java.math.BigInteger;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Date;
@@ -36,7 +34,7 @@ import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 import pruebajavafx.dto.VentasDto;
-import pruebajavafx.model.PvVentas;
+import pruebajavafx.services.DetallesService;
 import pruebajavafx.services.VentasService;
 import pruebajavafx.utils.Respuesta;
 
@@ -63,15 +61,22 @@ public class VentasEditarController implements Initializable {
     private Button btnGuardar;
     @FXML
     private Label lblTitulo;
+    @FXML
+    private Label lblDate;
+    @FXML
+    private Label lblPrecioTotal;
+    
     
     private ProductosService productosService;
     private VentasService ventasService;
+    private DetallesService detallesService;
     
     private String modalidad = "";
 
     ArrayList<DetallesDto> detalleProductos = new ArrayList<DetallesDto>();
     
     private VentasViewController ventasViewController;
+    
     
     /**
      * Initializes the controller class.
@@ -80,6 +85,9 @@ public class VentasEditarController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
         productosService = new ProductosService();
         ventasService = new VentasService();
+        detallesService = new DetallesService();
+                
+        lblPrecioTotal.setText("Total: ₡"+getPrecioTotalDeVenta());
         
         initCbxProductos();
         // TODO
@@ -191,6 +199,7 @@ public class VentasEditarController implements Initializable {
     
     private void eliminarDetalleDeLaLista(int index){
         detalleProductos.remove(index);
+        lblPrecioTotal.setText("Total: ₡"+getPrecioTotalDeVenta());
         cargarTabla();
     }
 
@@ -204,6 +213,7 @@ public class VentasEditarController implements Initializable {
                     detalle.setDetPrecio(cbxProductos.getValue().getProPrecio());
                     detalle.setDetProducto(cbxProductos.getValue());
                     detalleProductos.add(detalle);
+                    lblPrecioTotal.setText("Total: ₡"+getPrecioTotalDeVenta());
                     cargarTabla();
                 }else{
                     Mensaje.show(Alert.AlertType.WARNING, "Opps", "No hay unidades suficientes de "+cbxProductos.getValue().getProNombre()+". Cantidad disponible: "+cbxProductos.getValue().getProCantidad());
@@ -227,41 +237,70 @@ public class VentasEditarController implements Initializable {
 
     @FXML
     private void actCancelar(ActionEvent event) {
+        closeStage();
+    }
+
+    private void closeStage(){
         Stage stageActual =  (Stage) txtCantidad.getScene().getWindow();
         stageActual.close();
     }
-
+    
     @FXML
     private void actGuardar(ActionEvent event) {
-        if(modalidad.equals("Agregar")){
-            if(!txtCliente.getText().isEmpty() && detalleProductos.size() > 0){
+        if(!txtCliente.getText().isEmpty() && detalleProductos.size() > 0){
+            if(modalidad.equals("Agregar")){
                 VentasDto venta = new VentasDto();
                 venta.setVenId(Long.valueOf(-1));
                 venta.setVenCliente(txtCliente.getText());
                 venta.setVenFecha(new Date());
-                venta.setVenPrecioTotal(15500);
+                venta.setVenPrecioTotal(getPrecioTotalDeVenta());
+                
                 Respuesta res = ventasService.saveVenta(venta);
                 if(res.getEstado()){
-//                    res = ventasService.getVenta(venta.getVenCliente(), BigDecimal.valueOf(venta.getVenPrecioTotal()).toBigInteger(), venta.getVenFecha());
-//                    if(res.getEstado()){
-//                        venta = (VentasDto) res.getResultado("Venta");
-//                        System.out.println(venta.getVenId());
-//                         
-//                        setVentaToDetalles(venta);
-//                    }
+                    venta = (VentasDto) res.getResultado("Venta");
+                    venta.setVenId(venta.getVenId() + 1); //truco para que funcionara
+                    setVentaToDetalles(venta);
+                    Respuesta resDetalles = detallesService.saveArrayDetalles(detalleProductos);
+                    if(resDetalles.getEstado()){
+                        closeStage();
+                        Mensaje.showAndWait(Alert.AlertType.INFORMATION, "Registro de Venta", "La venta se realizo de manera exitosa");
+                        
+                    }else{
+                        Mensaje.showAndWait(Alert.AlertType.INFORMATION, "Registro de Venta", "Algo salio mal al momento de realizar la venta, intenta luego");
+                    }
                 }
             }else{
-                Mensaje.showAndWait(Alert.AlertType.WARNING, "Opps", "Hay campos vacíos");
+                //editar la venta
             }
         }else{
-            //editar la venta
+            Mensaje.showAndWait(Alert.AlertType.WARNING, "Opps", "Hay campos vacíos");
         }
+        
+            
+                
+                
+                
+                
+                
+                
+                
+            
+        
     }
     
     private void setVentaToDetalles(VentasDto venta){
         for(int i=0; i < detalleProductos.size(); i++){
+            detalleProductos.get(i).setDetId(Long.valueOf(-1));
             detalleProductos.get(i).setDetVenta(venta);
         }
+    }
+    
+    private float getPrecioTotalDeVenta(){
+        float precioTotal = 0;
+        for(int i=0; i < detalleProductos.size(); i++){
+            precioTotal += (detalleProductos.get(i).getDetPrecio() * detalleProductos.get(i).getDetCantidad());
+        }
+        return precioTotal;
     }
     
 }
