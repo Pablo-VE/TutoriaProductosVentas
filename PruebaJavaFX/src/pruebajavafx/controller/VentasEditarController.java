@@ -5,8 +5,11 @@
  */
 package pruebajavafx.controller;
 
+import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.ResourceBundle;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
@@ -27,10 +30,15 @@ import pruebajavafx.services.ProductosService;
 import pruebajavafx.utils.Mensaje;
 import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.geometry.Pos;
+import javafx.scene.control.Label;
 import javafx.scene.control.TableCell;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 import javafx.util.Callback;
+import pruebajavafx.dto.VentasDto;
+import pruebajavafx.model.PvVentas;
+import pruebajavafx.services.VentasService;
+import pruebajavafx.utils.Respuesta;
 
 /**
  * FXML Controller class
@@ -53,19 +61,45 @@ public class VentasEditarController implements Initializable {
     private Button btnCancelar;
     @FXML
     private Button btnGuardar;
+    @FXML
+    private Label lblTitulo;
     
     private ProductosService productosService;
+    private VentasService ventasService;
+    
+    private String modalidad = "";
 
     ArrayList<DetallesDto> detalleProductos = new ArrayList<DetallesDto>();
+    
+    private VentasViewController ventasViewController;
+    
     /**
      * Initializes the controller class.
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         productosService = new ProductosService();
+        ventasService = new VentasService();
+        
         initCbxProductos();
         // TODO
     }   
+    
+    public void EstablecerModalidad(String modalidad){
+        this.modalidad = modalidad;
+        
+        if(this.modalidad == "Agregar"){
+            lblTitulo.setText("Agregar Venta");
+        }else{
+            lblTitulo.setText("Editar Venta");
+        }
+    }
+
+    public void setVentasViewController(VentasViewController ventasViewController) {
+        this.ventasViewController = ventasViewController;
+    }
+    
+    
     
     public void initCbxProductos(){
         ArrayList<ProductosDto> productos = new ArrayList<ProductosDto>();
@@ -161,10 +195,6 @@ public class VentasEditarController implements Initializable {
     }
 
     @FXML
-    private void actSelProducto(ActionEvent event) {
-    }
-
-    @FXML
     private void actAgregar(ActionEvent event) {
         if(!txtCantidad.getText().isEmpty() && cbxProductos.getValue() != null){
             if(!findDetalleByProduct(cbxProductos.getValue())){
@@ -186,7 +216,7 @@ public class VentasEditarController implements Initializable {
         }
     }
     
-    public boolean findDetalleByProduct(ProductosDto producto){
+    private boolean findDetalleByProduct(ProductosDto producto){
         for(int i=0; i<detalleProductos.size(); i++){
             if(detalleProductos.get(i).getDetProducto().getProNombre().equals(producto.getProNombre())){
                 return true;
@@ -203,6 +233,35 @@ public class VentasEditarController implements Initializable {
 
     @FXML
     private void actGuardar(ActionEvent event) {
+        if(modalidad.equals("Agregar")){
+            if(!txtCliente.getText().isEmpty() && detalleProductos.size() > 0){
+                VentasDto venta = new VentasDto();
+                venta.setVenId(Long.valueOf(-1));
+                venta.setVenCliente(txtCliente.getText());
+                venta.setVenFecha(new Date());
+                venta.setVenPrecioTotal(15500);
+                Respuesta res = ventasService.saveVenta(venta);
+                if(res.getEstado()){
+//                    res = ventasService.getVenta(venta.getVenCliente(), BigDecimal.valueOf(venta.getVenPrecioTotal()).toBigInteger(), venta.getVenFecha());
+//                    if(res.getEstado()){
+//                        venta = (VentasDto) res.getResultado("Venta");
+//                        System.out.println(venta.getVenId());
+//                         
+//                        setVentaToDetalles(venta);
+//                    }
+                }
+            }else{
+                Mensaje.showAndWait(Alert.AlertType.WARNING, "Opps", "Hay campos vacíos");
+            }
+        }else{
+            //editar la venta
+        }
+    }
+    
+    private void setVentaToDetalles(VentasDto venta){
+        for(int i=0; i < detalleProductos.size(); i++){
+            detalleProductos.get(i).setDetVenta(venta);
+        }
     }
     
 }

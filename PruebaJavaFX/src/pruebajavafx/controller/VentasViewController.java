@@ -64,8 +64,8 @@ public class VentasViewController implements Initializable {
             Parent root = loader.load();
             VentasEditarController ventasEditarController = loader.getController();
             
-//            productosEditarController.EstablecerModalidad(modalidad);
-//            productosEditarController.setProductosViewController(this);
+            ventasEditarController.EstablecerModalidad(modalidad);
+//            ventasEditarController.setVentasViewController(this);
 //            if(modalidad.equals("Editar")){
 //                productosEditarController.setProductoAEditar(productoEditar);
 //            }

@@ -9,10 +9,9 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-
-<AnchorPane id="AnchorPane" prefHeight="562.0" prefWidth="773.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8.0.171" fx:controller="pruebajavafx.controller.VentasEditarController">
+<AnchorPane id="AnchorPane" prefHeight="562.0" prefWidth="773.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="pruebajavafx.controller.VentasEditarController">
    <children>
-      <Label layoutX="35.0" layoutY="26.0" prefHeight="35.0" prefWidth="174.0" text="VENTA" textAlignment="CENTER">
+      <Label fx:id="lblTitulo" layoutX="35.0" layoutY="26.0" prefHeight="35.0" prefWidth="174.0" text="VENTA" textAlignment="CENTER">
          <font>
             <Font name="System Bold" size="16.0" />
          </font>
@@ -28,7 +27,7 @@
             <Font size="16.0" />
          </font>
       </Label>
-      <ComboBox fx:id="cbxProductos" layoutX="122.0" layoutY="138.0" onAction="#actSelProducto" prefHeight="35.0" prefWidth="137.0" promptText="Producto" />
+      <ComboBox fx:id="cbxProductos" layoutX="122.0" layoutY="138.0" prefHeight="35.0" prefWidth="137.0" promptText="Producto" />
       <Label layoutX="286.0" layoutY="138.0" prefHeight="35.0" prefWidth="72.0" text="Cantidad:" textAlignment="CENTER">
          <font>
             <Font size="16.0" />

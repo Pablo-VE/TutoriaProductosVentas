@@ -23,6 +23,7 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
+import pruebajavafx.dto.VentasDto;
 
 /**
  *
@@ -63,6 +64,15 @@ public class PvVentas implements Serializable {
 
     public PvVentas(BigDecimal venId) {
         this.venId = venId;
+    }
+    
+    public PvVentas(VentasDto venta) {
+        if(venta.getVenId()>0){
+            this.venId = BigDecimal.valueOf(venta.getVenId());
+        }
+        this.venCliente = venta.getVenCliente();
+        this.venFecha = venta.getVenFecha();
+        this.venPrecioTotal = BigDecimal.valueOf(venta.getVenPrecioTotal()).toBigInteger();
     }
 
     public PvVentas(BigDecimal venId, Date venFecha, BigInteger venPrecioTotal, String venCliente) {

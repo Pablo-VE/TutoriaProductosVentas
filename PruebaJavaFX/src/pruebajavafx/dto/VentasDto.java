@@ -5,6 +5,7 @@
  */
 package pruebajavafx.dto;
 
+import java.time.Instant;
 import java.util.Date;
 import javafx.beans.property.SimpleStringProperty;
 import pruebajavafx.model.PvVentas;
@@ -16,13 +17,13 @@ import pruebajavafx.model.PvVentas;
 public class VentasDto {
     
     private SimpleStringProperty venId;
-    private SimpleStringProperty venFecha;
+    private Date venFecha;
     private SimpleStringProperty venPrecioTotal;
     private SimpleStringProperty venCliente;
 
     public VentasDto() {
         venId = new SimpleStringProperty();
-        venFecha = new SimpleStringProperty();
+        venFecha = new Date();
         venPrecioTotal = new SimpleStringProperty();
         venCliente = new SimpleStringProperty();
     }
@@ -32,7 +33,7 @@ public class VentasDto {
         this.venId.set(String.valueOf(venta.getVenId()));
         this.venPrecioTotal.set(String.valueOf(venta.getVenPrecioTotal()));
         this.venCliente.set(String.valueOf(venta.getVenCliente()));
-        //fecha
+        this.venFecha = venta.getVenFecha();
     }
     
     public Long getVenId() {
@@ -43,13 +44,13 @@ public class VentasDto {
         this.venId.set(String.valueOf(venId));
     }
 
-//    public Date getVenFecha() {
-//        return new Date(this.venFecha.get());
-//    }
-//
-//    public void setVenFecha(SimpleStringProperty venFecha) {
-//        this.venFecha = venFecha;
-//    }
+    public Date getVenFecha() {
+        return this.venFecha;
+    }
+    
+    public void setVenFecha(Date venFecha) {
+        this.venFecha = venFecha;
+    }
 
     public float getVenPrecioTotal() {
         return Float.valueOf(venPrecioTotal.get());
