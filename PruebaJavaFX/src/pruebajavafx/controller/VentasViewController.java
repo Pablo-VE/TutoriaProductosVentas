@@ -8,6 +8,7 @@ package pruebajavafx.controller;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
+import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -15,21 +16,28 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.Label;
+import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
+import javafx.util.Callback;
 import pruebajavafx.dto.ProductosDto;
 import pruebajavafx.dto.VentasDto;
 import pruebajavafx.services.ProductosService;
 import pruebajavafx.services.VentasService;
+import pruebajavafx.utils.Helpers;
 
 /**
  * FXML Controller class
@@ -49,6 +57,10 @@ public class VentasViewController implements Initializable {
     
     private ProductosService productosService;
     private VentasService ventasService;
+    @FXML
+    private Label lbLimpiar;
+    @FXML
+    private Button btnAmbosFiltros;
 
     /**
      * Initializes the controller class.
@@ -91,39 +103,81 @@ public class VentasViewController implements Initializable {
             TableColumn <VentasDto, SimpleStringProperty> colCantidad = new TableColumn("Precio Total");
             colCantidad.setCellValueFactory(new PropertyValueFactory("venPrecioTotal"));
             
-            TableColumn <VentasDto, SimpleStringProperty> colPrecio = new TableColumn("Fecha");
-            colPrecio.setCellValueFactory(new PropertyValueFactory("venFecha"));
+            TableColumn <VentasDto, String> colFecha = new TableColumn("Fecha");
+            colFecha.setCellValueFactory(obj -> {
+                return new ReadOnlyStringWrapper(Helpers.dateToString(obj.getValue().getVenFecha())); 
+            });
+            
             
             tvVentas.getColumns().addAll(colId);
             tvVentas.getColumns().addAll(colNombre);
             tvVentas.getColumns().addAll(colCantidad);
-            tvVentas.getColumns().addAll(colPrecio);
+            tvVentas.getColumns().addAll(colFecha);
+            
+            addButtonToTable();
             
             tvVentas.setItems(items);
         }
+    }
+    
+    private void addButtonToTable() {
+        TableColumn<VentasDto, Void> colBtn = new TableColumn("Acciones");
+
+        Callback<TableColumn<VentasDto, Void>, TableCell<VentasDto, Void>> cellFactory = new Callback<TableColumn<VentasDto, Void>, TableCell<VentasDto, Void>>() {
+            @Override
+            public TableCell<VentasDto, Void> call(final TableColumn<VentasDto, Void> param) {
+                final TableCell<VentasDto, Void> cell = new TableCell<VentasDto, Void>() {
+                    private final Button btn = new Button("Ver");
+                    {
+                        btn.setOnAction((ActionEvent event) -> {
+                            try{
+                                abrirVentasEditar("Ver", getTableView().getItems().get(getIndex()));
+                            }catch(Exception ex){}
+                        });
+                    }
+                    HBox pane = new HBox(btn);
+                    {
+                        pane.setAlignment(Pos.CENTER);
+                    }
+                    @Override
+                    public void updateItem(Void item, boolean empty) {
+                        super.updateItem(item, empty);
+                        if (empty) {
+                            setGraphic(null);
+                        } else {
+                            setGraphic(pane);
+                            
+                        }
+                    }
+                };
+                return cell;
+            }
+        };
+
+        colBtn.setCellFactory(cellFactory);
+
+        tvVentas.getColumns().add(colBtn);
     }
 
 
     @FXML
     private void actAgregar(ActionEvent event) {
-        abrirVentasEditar("Agregar");
+        abrirVentasEditar("Agregar", null);
     }
 
-    @FXML
-    private void actBuscarProductos(ActionEvent event) {
-    }
     
-    private void abrirVentasEditar(String modalidad/*, ProductosDto productoEditar*/){
+    
+    private void abrirVentasEditar(String modalidad, VentasDto venta){
         try{
             FXMLLoader loader = new FXMLLoader(getClass().getResource("../views/VentasEditar.fxml"));
             Parent root = loader.load();
             VentasEditarController ventasEditarController = loader.getController();
             
             ventasEditarController.EstablecerModalidad(modalidad);
-//            ventasEditarController.setVentasViewController(this);
-//            if(modalidad.equals("Editar")){
-//                productosEditarController.setProductoAEditar(productoEditar);
-//            }
+            ventasEditarController.setVentasViewController(this);
+            if(modalidad.equals("Ver")){
+                ventasEditarController.setVentaAVer(venta);
+            }
                     
             Scene scene = new Scene(root);
             Stage stage = new Stage();
@@ -142,5 +196,29 @@ public class VentasViewController implements Initializable {
             cargarTabla((ArrayList<VentasDto>) ventasService.getVentasByCliente(txtFilter.getText()).getResultado("Ventas"));
         }
     }
+    
+    @FXML
+    private void actBuscarProductos(ActionEvent event) {
+//        cargarTabla((ArrayList<VentasDto>) ventasService.getVentasByProducto(cbxProductos.getValue()).getResultado("Ventas"));
+    }
+    
+    @FXML
+    private void btnBuscarAmbosFiltros(ActionEvent event) {
+        if(cbxProductos.getValue() != null){
+            cargarTabla((ArrayList<VentasDto>) ventasService.getVentasByClienteAndProducto(txtFilter.getText(), cbxProductos.getValue()).getResultado("Ventas"));
+        }else{
+            cargarTabla((ArrayList<VentasDto>) ventasService.getVentasByCliente(txtFilter.getText()).getResultado("Ventas"));
+        }
+        
+    }
+
+    @FXML
+    private void actLimpiarCbx(MouseEvent event) {
+        cbxProductos.setValue(null);
+        cargarTablaConTodosLosRegistros();
+    }
+
+    
+    
     
 }

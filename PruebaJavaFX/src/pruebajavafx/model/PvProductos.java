@@ -57,7 +57,7 @@ public class PvProductos implements Serializable {
     @Basic(optional = false)
     @Column(name = "PRO_CANTIDAD")
     private BigInteger proCantidad;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "detProducto")
+    @OneToMany(mappedBy = "detProducto")
     private Collection<PvDetalles> pvDetallesCollection;
 
     public PvProductos() {

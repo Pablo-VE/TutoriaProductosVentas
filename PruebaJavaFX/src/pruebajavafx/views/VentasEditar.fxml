@@ -22,13 +22,13 @@
             <Font size="16.0" />
          </font>
       </Label>
-      <Label layoutX="41.0" layoutY="126.0" prefHeight="35.0" prefWidth="72.0" text="Producto:" textAlignment="CENTER">
+      <Label fx:id="lblProducto" layoutX="41.0" layoutY="126.0" prefHeight="35.0" prefWidth="72.0" text="Producto:" textAlignment="CENTER">
          <font>
             <Font size="16.0" />
          </font>
       </Label>
       <ComboBox fx:id="cbxProductos" layoutX="122.0" layoutY="126.0" prefHeight="35.0" prefWidth="137.0" promptText="Producto" />
-      <Label layoutX="286.0" layoutY="126.0" prefHeight="35.0" prefWidth="72.0" text="Cantidad:" textAlignment="CENTER">
+      <Label fx:id="lblCantidad" layoutX="286.0" layoutY="126.0" prefHeight="35.0" prefWidth="72.0" text="Cantidad:" textAlignment="CENTER">
          <font>
             <Font size="16.0" />
          </font>
@@ -59,7 +59,7 @@
             <Font name="System Bold" size="15.0" />
          </font>
       </Button>
-      <Label fx:id="lblDate" layoutX="41.0" layoutY="451.0" prefHeight="17.0" prefWidth="189.0" textAlignment="RIGHT" />
+      <Label fx:id="lblDate" layoutX="596.0" layoutY="35.0" prefHeight="17.0" prefWidth="137.0" textAlignment="RIGHT" />
       <Label fx:id="lblPrecioTotal" layoutX="584.0" layoutY="450.0" prefHeight="19.0" prefWidth="147.0" textAlignment="RIGHT">
          <font>
             <Font name="System Bold" size="13.0" />

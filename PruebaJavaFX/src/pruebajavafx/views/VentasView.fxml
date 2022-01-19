@@ -16,13 +16,13 @@
             <Font name="System Bold" size="16.0" />
          </font>
       </Label>
-      <TextField fx:id="txtFilter" layoutX="29.0" layoutY="82.0" onKeyPressed="#actBuscarCliente" prefHeight="36.0" prefWidth="343.0" />
-      <Button fx:id="btnAgregar" layoutX="725.0" layoutY="82.0" mnemonicParsing="false" onAction="#actAgregar" prefHeight="36.0" prefWidth="191.0" text="AGREGAR VENTA">
+      <TextField fx:id="txtFilter" layoutX="29.0" layoutY="82.0" onKeyPressed="#actBuscarCliente" prefHeight="36.0" prefWidth="343.0" promptText="Buscar por nombre de cliente" />
+      <Button fx:id="btnAgregar" layoutX="725.0" layoutY="465.0" mnemonicParsing="false" onAction="#actAgregar" prefHeight="36.0" prefWidth="191.0" text="AGREGAR VENTA">
          <font>
             <Font name="System Bold" size="15.0" />
          </font>
       </Button>
-      <TableView fx:id="tvVentas" layoutX="29.0" layoutY="147.0" prefHeight="362.0" prefWidth="887.0">
+      <TableView fx:id="tvVentas" layoutX="29.0" layoutY="147.0" prefHeight="299.0" prefWidth="887.0">
          <columns>
             <TableColumn prefWidth="75.0" text="C1" />
             <TableColumn prefWidth="75.0" text="C2" />
@@ -31,6 +31,12 @@
             <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
          </columnResizePolicy>
       </TableView>
-      <ComboBox fx:id="cbxProductos" layoutX="386.0" layoutY="82.0" onAction="#actBuscarProductos" prefHeight="36.0" prefWidth="174.0" />
+      <ComboBox fx:id="cbxProductos" layoutX="386.0" layoutY="82.0" onAction="#actBuscarProductos" prefHeight="36.0" prefWidth="174.0" promptText="Producto" />
+      <Label fx:id="lbLimpiar" layoutX="523.0" layoutY="58.0" onMouseClicked="#actLimpiarCbx" text="limpiar" />
+      <Button fx:id="btnAmbosFiltros" layoutX="581.0" layoutY="82.0" mnemonicParsing="false" onAction="#btnBuscarAmbosFiltros" prefHeight="36.0" prefWidth="182.0" text="Buscar por ambos filtros">
+         <font>
+            <Font name="System Bold" size="13.0" />
+         </font>
+      </Button>
    </children>
 </AnchorPane>

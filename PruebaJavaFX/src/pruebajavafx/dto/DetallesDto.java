@@ -30,8 +30,8 @@ public class DetallesDto {
         this.detId.set(String.valueOf(detalle.getDetId()));
         this.detCantidad.set(String.valueOf(detalle.getDetCantidad()));
         this.detPrecio.set(String.valueOf(detalle.getDetPrecio()));
-//        this.detProducto = new ProductosDto(detalle.getDetProducto());
-//        this.detVenta = new VentasDto(detalle.getDetVenta());
+        this.detProducto = new ProductosDto(detalle.getDetProducto());
+        this.detVenta = new VentasDto(detalle.getDetVenta());
     }
 
     public Long getDetId() {

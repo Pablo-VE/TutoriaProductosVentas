@@ -36,6 +36,7 @@ import javafx.util.Callback;
 import pruebajavafx.dto.VentasDto;
 import pruebajavafx.services.DetallesService;
 import pruebajavafx.services.VentasService;
+import pruebajavafx.utils.Helpers;
 import pruebajavafx.utils.Respuesta;
 
 /**
@@ -77,6 +78,12 @@ public class VentasEditarController implements Initializable {
     
     private VentasViewController ventasViewController;
     
+    private VentasDto ventaAVer;
+    @FXML
+    private Label lblProducto;
+    @FXML
+    private Label lblCantidad;
+    
     
     /**
      * Initializes the controller class.
@@ -96,11 +103,51 @@ public class VentasEditarController implements Initializable {
     public void EstablecerModalidad(String modalidad){
         this.modalidad = modalidad;
         
-        if(this.modalidad == "Agregar"){
+        if(modalidad == "Agregar"){
             lblTitulo.setText("Agregar Venta");
         }else{
-            lblTitulo.setText("Editar Venta");
+            if(modalidad == "Ver"){
+                lblTitulo.setText("Ver Venta");
+            }
+            
         }
+    }
+    
+    public void setVentaAVer(VentasDto venta){
+        this.ventaAVer = venta;
+        
+        lblTitulo.setText("Venta #"+ventaAVer.getVenId());
+        
+        lblDate.setText(Helpers.dateToString(ventaAVer.getVenFecha()));
+        
+        txtCliente.setText(ventaAVer.getVenCliente());
+        txtCliente.setDisable(true);
+        
+        lblProducto.setVisible(false);
+        cbxProductos.setVisible(false);
+        cbxProductos.setDisable(true);
+        
+        lblCantidad.setVisible(false);
+        txtCantidad.setVisible(false);
+        txtCantidad.setDisable(true);
+        
+        btnAgregar.setVisible(false);
+        btnAgregar.setDisable(true);
+        
+        btnGuardar.setVisible(false);
+        btnGuardar.setDisable(true);
+        
+        btnCancelar.setText("Salir");
+        
+        tvProductos.setLayoutY(133);
+        tvProductos.setPrefHeight(337);
+        
+        lblPrecioTotal.setLayoutX(586);
+        lblPrecioTotal.setLayoutY(506);
+        
+        detalleProductos = (ArrayList<DetallesDto>) detallesService.getDetallesByVenta(ventaAVer).getResultado("Detalles");
+        cargarTabla();
+        lblPrecioTotal.setText("Total: ₡"+getPrecioTotalDeVenta());
     }
 
     public void setVentasViewController(VentasViewController ventasViewController) {
@@ -145,7 +192,10 @@ public class VentasEditarController implements Initializable {
             
             tvProductos.setItems(items);
             
-            addButtonToTable();
+            if(modalidad == "Agregar"){
+                addButtonToTable();
+            }
+            
         }
     }
     
@@ -156,14 +206,6 @@ public class VentasEditarController implements Initializable {
             @Override
             public TableCell<DetallesDto, Void> call(final TableColumn<DetallesDto, Void> param) {
                 final TableCell<DetallesDto, Void> cell = new TableCell<DetallesDto, Void>() {
-                    private final Button btn = new Button("Editar");
-                    {
-                        btn.setOnAction((ActionEvent event) -> {
-                            try{
-                                
-                            }catch(Exception ex){}
-                        });
-                    }
                     private final Button btn2 = new Button("Eliminar");
 
                     {
@@ -258,13 +300,12 @@ public class VentasEditarController implements Initializable {
                 Respuesta res = ventasService.saveVenta(venta);
                 if(res.getEstado()){
                     venta = (VentasDto) res.getResultado("Venta");
-                    venta.setVenId(venta.getVenId() + 1); //truco para que funcionara
                     setVentaToDetalles(venta);
                     Respuesta resDetalles = detallesService.saveArrayDetalles(detalleProductos);
                     if(resDetalles.getEstado()){
                         closeStage();
                         Mensaje.showAndWait(Alert.AlertType.INFORMATION, "Registro de Venta", "La venta se realizo de manera exitosa");
-                        
+                        ventasViewController.cargarTablaConTodosLosRegistros();
                     }else{
                         Mensaje.showAndWait(Alert.AlertType.INFORMATION, "Registro de Venta", "Algo salio mal al momento de realizar la venta, intenta luego");
                     }

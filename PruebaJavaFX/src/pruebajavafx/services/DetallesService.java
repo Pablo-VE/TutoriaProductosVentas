@@ -9,8 +9,13 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
+import javax.persistence.Query;
 import pruebajavafx.dto.DetallesDto;
+import pruebajavafx.dto.ProductosDto;
+import pruebajavafx.dto.VentasDto;
 import pruebajavafx.model.PvDetalles;
+import pruebajavafx.model.PvProductos;
+import pruebajavafx.model.PvVentas;
 import pruebajavafx.utils.EntityManagerHelper;
 import pruebajavafx.utils.Respuesta;
 
@@ -21,6 +26,21 @@ import pruebajavafx.utils.Respuesta;
 public class DetallesService {
     EntityManager em = EntityManagerHelper.getInstance().getManager();
     private EntityTransaction et;
+    
+    public Respuesta getDetallesByVenta(VentasDto venta){
+        Query query = em.createQuery("select d from PvDetalles d where d.detVenta = :venta");
+        query.setParameter("venta", new PvVentas(venta));
+ 
+        ArrayList<DetallesDto> detalles = new ArrayList<DetallesDto>();
+
+        if(query.getResultList().size() > 0){
+            for(int i=0; i<query.getResultList().size(); i++){
+                detalles.add(new DetallesDto((PvDetalles) query.getResultList().get(i)));
+            }
+        }
+     
+        return new Respuesta(true, "", "", "Detalles", detalles);
+    }
     
     public Respuesta saveDetalle(DetallesDto detalleDto){
         try{
