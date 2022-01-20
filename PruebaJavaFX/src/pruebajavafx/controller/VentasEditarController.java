@@ -36,6 +36,7 @@ import javafx.util.Callback;
 import pruebajavafx.dto.VentasDto;
 import pruebajavafx.services.DetallesService;
 import pruebajavafx.services.VentasService;
+import pruebajavafx.utils.GeneratePDF;
 import pruebajavafx.utils.Helpers;
 import pruebajavafx.utils.Respuesta;
 
@@ -83,6 +84,8 @@ public class VentasEditarController implements Initializable {
     private Label lblProducto;
     @FXML
     private Label lblCantidad;
+    @FXML
+    private Button btnGuardarFactura;
     
     
     /**
@@ -289,6 +292,30 @@ public class VentasEditarController implements Initializable {
     
     @FXML
     private void actGuardar(ActionEvent event) {
+        GuardarVenta(false);
+    }
+    
+    private void setVentaToDetalles(VentasDto venta){
+        for(int i=0; i < detalleProductos.size(); i++){
+            detalleProductos.get(i).setDetId(Long.valueOf(-1));
+            detalleProductos.get(i).setDetVenta(venta);
+        }
+    }
+    
+    private float getPrecioTotalDeVenta(){
+        float precioTotal = 0;
+        for(int i=0; i < detalleProductos.size(); i++){
+            precioTotal += (detalleProductos.get(i).getDetPrecio() * detalleProductos.get(i).getDetCantidad());
+        }
+        return precioTotal;
+    }
+
+    @FXML
+    private void actGuardarYGenerarFactura(ActionEvent event) {
+        GuardarVenta(true);
+    }
+    
+    private void GuardarVenta(boolean llevaFactura){
         if(!txtCliente.getText().isEmpty() && detalleProductos.size() > 0){
             if(modalidad.equals("Agregar")){
                 VentasDto venta = new VentasDto();
@@ -306,42 +333,18 @@ public class VentasEditarController implements Initializable {
                         closeStage();
                         Mensaje.showAndWait(Alert.AlertType.INFORMATION, "Registro de Venta", "La venta se realizo de manera exitosa");
                         ventasViewController.cargarTablaConTodosLosRegistros();
+                        
+                        if(llevaFactura){
+                            GeneratePDF.CreatePDFVenta(venta, detalleProductos);
+                        }
                     }else{
                         Mensaje.showAndWait(Alert.AlertType.INFORMATION, "Registro de Venta", "Algo salio mal al momento de realizar la venta, intenta luego");
                     }
                 }
-            }else{
-                //editar la venta
             }
         }else{
             Mensaje.showAndWait(Alert.AlertType.WARNING, "Opps", "Hay campos vacíos");
         }
-        
-            
-                
-                
-                
-                
-                
-                
-                
-            
-        
-    }
-    
-    private void setVentaToDetalles(VentasDto venta){
-        for(int i=0; i < detalleProductos.size(); i++){
-            detalleProductos.get(i).setDetId(Long.valueOf(-1));
-            detalleProductos.get(i).setDetVenta(venta);
-        }
-    }
-    
-    private float getPrecioTotalDeVenta(){
-        float precioTotal = 0;
-        for(int i=0; i < detalleProductos.size(); i++){
-            precioTotal += (detalleProductos.get(i).getDetPrecio() * detalleProductos.get(i).getDetCantidad());
-        }
-        return precioTotal;
     }
     
 }

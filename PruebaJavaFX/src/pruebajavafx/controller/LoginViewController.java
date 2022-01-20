@@ -21,6 +21,7 @@ import javafx.stage.Stage;
 import pruebajavafx.dto.UsuariosDto;
 import pruebajavafx.services.UsuariosService;
 import pruebajavafx.utils.AppContext;
+import pruebajavafx.utils.GeneratePDF;
 import pruebajavafx.utils.Mensaje;
 import pruebajavafx.utils.Respuesta;
 
@@ -88,6 +89,8 @@ public class LoginViewController implements Initializable {
             stage.setResizable(false);
             stage.setTitle("Supemercados Pali");
             stage.show();
+            
+//            GeneratePDF.CreatePDFWithOnlyParagraph("login", "Usuario: "+usuario.getUsuNombre());
         }catch(Exception e){
             System.out.println("Error: Controller - LoginViewController - Ingresar()");
         }

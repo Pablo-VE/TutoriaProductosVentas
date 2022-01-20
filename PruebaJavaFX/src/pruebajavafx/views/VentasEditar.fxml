@@ -65,5 +65,10 @@
             <Font name="System Bold" size="13.0" />
          </font>
       </Label>
+      <Button fx:id="btnGuardarFactura" layoutX="314.0" layoutY="497.0" mnemonicParsing="false" onAction="#actGuardarYGenerarFactura" prefHeight="36.0" prefWidth="270.0" text="GUARDAR Y GENERAR FACTURA">
+         <font>
+            <Font name="System Bold" size="15.0" />
+         </font>
+      </Button>
    </children>
 </AnchorPane>
