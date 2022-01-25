@@ -49,5 +49,10 @@
          <font>
             <Font name="System Bold" size="15.0" />
          </font></Label>
+      <Button fx:id="btnUsuarios" layoutX="381.0" mnemonicParsing="false" onAction="#actGoUsuarios" prefHeight="55.0" prefWidth="127.0" style="-fx-background-color: #ffe900;" text="USUARIOS">
+         <font>
+            <Font name="System Bold" size="15.0" />
+         </font>
+      </Button>
    </children>
 </AnchorPane>

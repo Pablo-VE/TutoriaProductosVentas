@@ -38,6 +38,8 @@ public class HelloWorldController implements Initializable {
     private Label lblNombreUsuario;
     @FXML
     private AnchorPane apInicio;
+    @FXML
+    private Button btnUsuarios;
     
     
 
@@ -48,6 +50,11 @@ public class HelloWorldController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
         UsuariosDto usuario = (UsuariosDto) AppContext.getInstance().get("usuarioLogeado");
         lblNombreUsuario.setText(usuario.getUsuNombre());
+        
+        if(!usuario.getUsuRol().equals("A")){
+            btnUsuarios.setDisable(true);
+            btnUsuarios.setVisible(false);
+        }
         // TODO
     }    
 
@@ -78,6 +85,18 @@ public class HelloWorldController implements Initializable {
             spContenedor.getChildren().remove(apInicio);
         }catch(Exception e){
             System.out.println("Error: Controller - HelloWorldController - actGoVentas");
+        }
+    }
+
+    @FXML
+    private void actGoUsuarios(ActionEvent event) {
+        try{
+            Parent root = FXMLLoader.load(getClass().getResource("../views/UsuariosView.fxml"));
+            spContenedor.getChildren().clear();
+            spContenedor.getChildren().add(root);
+            spContenedor.getChildren().remove(apInicio);
+        }catch(Exception e){
+            System.out.println("Error: Controller - HelloWorldController - actGoUsuarios");
         }
     }
     

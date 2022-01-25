@@ -5,6 +5,7 @@
  */
 package pruebajavafx.services;
 
+import java.util.ArrayList;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
 import javax.persistence.Query;
@@ -31,5 +32,20 @@ public class UsuariosService {
             return new Respuesta(false, "Opps", "Usuario o contraseña incorrecto");
         }
         
+    }
+    
+    public Respuesta getUsuarioByNombreOrCorreo(String filtro){
+        Query query = em.createQuery("Select u from PvUsuarios u where upper(u.usuNombre) like upper(:filtro) or upper(u.usuUsuario) like upper(:filtro)");
+        query.setParameter("filtro", "%"+filtro+"%");
+ 
+        ArrayList<UsuariosDto> usuarios = new ArrayList<UsuariosDto>();
+
+        if(query.getResultList().size() > 0){
+            for(int i=0; i<query.getResultList().size(); i++){
+                usuarios.add(new UsuariosDto((PvUsuarios) query.getResultList().get(i)));
+            }
+        }
+     
+        return new Respuesta(true, "", "", "Usuarios", usuarios); 
     }
 }
