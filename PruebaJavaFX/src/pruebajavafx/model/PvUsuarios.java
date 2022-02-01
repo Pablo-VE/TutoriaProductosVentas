@@ -18,6 +18,7 @@ import javax.persistence.NamedQuery;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlRootElement;
+import pruebajavafx.dto.UsuariosDto;
 
 /**
  *
@@ -60,6 +61,20 @@ public class PvUsuarios implements Serializable {
 
     public PvUsuarios(BigDecimal usuId) {
         this.usuId = usuId;
+    }
+    
+    public PvUsuarios(UsuariosDto usuario) {
+        if(usuario.getUsuId() > 0){
+            this.usuId = BigDecimal.valueOf(usuario.getUsuId());
+        }
+        Modificar(usuario);
+    }
+    
+    public void Modificar(UsuariosDto usuario) {
+        usuUsuario = usuario.getUsuUsuario();
+        usuContrasena = usuario.getUsuContrasena();
+        usuNombre = usuario.getUsuNombre();
+        usuRol = usuario.getUsuRol();
     }
 
     public PvUsuarios(BigDecimal usuId, String usuUsuario, String usuContrasena, String usuRol) {

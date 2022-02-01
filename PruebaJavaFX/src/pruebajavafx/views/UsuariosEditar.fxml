@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+
+<AnchorPane id="AnchorPane" prefHeight="362.0" prefWidth="386.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8.0.171" fx:controller="pruebajavafx.controller.UsuariosEditarController">
+   <children>
+      <TextField fx:id="txtNombre" layoutX="48.0" layoutY="88.0" prefHeight="36.0" prefWidth="290.0" promptText="Nombre" />
+      <Button fx:id="btnCancelar" layoutX="48.0" layoutY="288.0" mnemonicParsing="false" onAction="#actCancelar" prefHeight="36.0" prefWidth="102.0" text="CANCELAR" />
+      <Button fx:id="btnGuardar" layoutX="236.0" layoutY="288.0" mnemonicParsing="false" onAction="#actGuardar" prefHeight="36.0" prefWidth="102.0" text="GUARDAR" />
+      <Label fx:id="lblTitulo" layoutX="125.0" layoutY="37.0" prefHeight="17.0" prefWidth="136.0" textAlignment="CENTER">
+         <font>
+            <Font size="17.0" />
+         </font>
+      </Label>
+      <TextField fx:id="txtCorreo" layoutX="48.0" layoutY="154.0" prefHeight="36.0" prefWidth="290.0" promptText="Correo" />
+      <ComboBox fx:id="cbxRol" layoutX="48.0" layoutY="220.0" onAction="#actSelRol" prefHeight="36.0" prefWidth="290.0" promptText="Rol" />
+   </children>
+</AnchorPane>

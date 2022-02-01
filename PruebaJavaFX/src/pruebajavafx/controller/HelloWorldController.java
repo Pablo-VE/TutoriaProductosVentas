@@ -55,7 +55,6 @@ public class HelloWorldController implements Initializable {
             btnUsuarios.setDisable(true);
             btnUsuarios.setVisible(false);
         }
-        // TODO
     }    
 
     @FXML

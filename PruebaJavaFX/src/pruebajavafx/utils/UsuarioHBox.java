@@ -6,14 +6,21 @@
 package pruebajavafx.utils;
 
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
+import java.util.Optional;
+import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
 import javafx.scene.Cursor;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
+import pruebajavafx.controller.UsuariosEditarController;
 import pruebajavafx.dto.UsuariosDto;
 
 /**
@@ -113,6 +120,14 @@ public class UsuarioHBox extends HBox{
             imgEditar.setFitWidth(35);
             imgEditar.setPreserveRatio(true);
             imgEditar.setCursor(Cursor.HAND);
+            imgEditar.setOnMouseClicked( event -> {
+                try{
+                    EditarUsuario();
+                }catch(Exception ex){
+                }
+            });
+                    
+            //-------------------------------------------------------------------------
             
             input = new FileInputStream("./src/pruebajavafx/resources/eliminar.png");
             image = new Image(input);
@@ -120,6 +135,15 @@ public class UsuarioHBox extends HBox{
             imgEliminar.setFitWidth(40);
             imgEliminar.setPreserveRatio(true);
             imgEliminar.setCursor(Cursor.HAND);
+            
+            imgEliminar.setOnMouseClicked( event -> {
+                try{
+                    EliminarUsuario();
+                }catch(Exception ex){
+                }
+            });
+            
+            //-------------------------------------------------------------------------
             
             contenedorBotones.getChildren().add(imgEditar);
             contenedorBotones.getChildren().add(imgEliminar);
@@ -131,8 +155,35 @@ public class UsuarioHBox extends HBox{
         }
     }
     
+    private void EditarUsuario(){
+        try{
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("../views/UsuariosEditar.fxml"));
+            Parent root = loader.load();
+            UsuariosEditarController usuariosEditarController = loader.getController();
+            
+            usuariosEditarController.EstablecerModalidad("Editar");
+                    
+            Scene scene = new Scene(root);
+            Stage stage = new Stage();
+            stage.setScene(scene);
+            stage.setTitle("Editar" + " Usuario");
+            stage.setResizable(false);
+            stage.show();
+        }catch(Exception e){
+            System.out.println("Error: Utils - UsuarioHBox - EditarUsuario");
+        }
+    }
     
-    
+    private void EliminarUsuario(){
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setHeaderText(null);
+        alert.setTitle("Eliminar Usuario");
+        alert.setContentText("¿Esta seguro de ELIMINAR el usuario: "+usuario.getUsuNombre()+"?");
+        Optional<ButtonType> action = alert.showAndWait();
+        if (action.get() == ButtonType.OK) {
+            
+        }
+    }
     
     // Estilos de Componentes
     

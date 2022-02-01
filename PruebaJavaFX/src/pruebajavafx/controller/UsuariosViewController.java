@@ -10,13 +10,17 @@ import java.util.ArrayList;
 import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
 import pruebajavafx.dto.UsuariosDto;
 import pruebajavafx.services.UsuariosService;
 import pruebajavafx.utils.UsuarioHBox;
@@ -83,9 +87,30 @@ public class UsuariosViewController implements Initializable {
 
     @FXML
     private void actAgregar(ActionEvent event) {
+        abrirUsuariosEditar("Agregar", null);
     }
     
     private String ContenedorStyle(){
         return "-fx-spacing: 10;";
+    }
+    
+    private void abrirUsuariosEditar(String modalidad, UsuariosDto usuarioEditar){
+        try{
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("../views/UsuariosEditar.fxml"));
+            Parent root = loader.load();
+            UsuariosEditarController usuariosEditarController = loader.getController();
+            
+            usuariosEditarController.EstablecerModalidad(modalidad);
+            usuariosEditarController.setUsuariosViewController(this);
+                    
+            Scene scene = new Scene(root);
+            Stage stage = new Stage();
+            stage.setScene(scene);
+            stage.setTitle(modalidad + " Usuario");
+            stage.setResizable(false);
+            stage.show();
+        }catch(Exception e){
+            System.out.println("Error: Controller - UsuariosViewController - abrirUsuariosEditar");
+        }
     }
 }

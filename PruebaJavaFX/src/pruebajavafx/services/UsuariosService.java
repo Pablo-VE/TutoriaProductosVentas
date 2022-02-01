@@ -5,6 +5,7 @@
  */
 package pruebajavafx.services;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
@@ -47,5 +48,30 @@ public class UsuariosService {
         }
      
         return new Respuesta(true, "", "", "Usuarios", usuarios); 
+    }
+    
+    public Respuesta saveUsuario(UsuariosDto usuarioDto){
+        try{
+            et = em.getTransaction();
+            et.begin();
+            PvUsuarios usuarioBd;
+            if(usuarioDto.getUsuId() != null && usuarioDto.getUsuId() > 0){
+                usuarioBd = em.find(PvUsuarios.class, BigDecimal.valueOf(usuarioDto.getUsuId()));
+                if(usuarioBd == null){
+                    return new Respuesta(false, "No se pudo modificar el registro", "Id no existe en la base de datos");
+                }
+                usuarioBd.Modificar(usuarioDto);
+                usuarioBd = em.merge(usuarioBd);
+            }else{
+                usuarioBd = new PvUsuarios(usuarioDto);
+                em.persist(usuarioBd);
+            }
+            et.commit();
+            return new Respuesta(true, "", "", "Usuario", new UsuariosDto(usuarioBd));
+        }catch(Exception ex){
+            et.rollback();
+            System.out.println(ex);
+            return new Respuesta(false, "No se pudo guardar el registro", "");
+        }
     }
 }
