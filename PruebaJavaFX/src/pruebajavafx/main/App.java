@@ -25,7 +25,7 @@ public class App extends Application{
         Parent root = FXMLLoader.load(getClass().getResource("../views/LoginView.fxml"));
         Scene scene = new Scene(root);
         stage.setScene(scene);
-        stage.setTitle("Inicio");
+        stage.setTitle("Supermecados Pali - Inicio");
         stage.setResizable(false);
         stage.show();
     }

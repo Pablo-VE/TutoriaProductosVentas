@@ -21,7 +21,9 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import pruebajavafx.controller.UsuariosEditarController;
+import pruebajavafx.controller.UsuariosViewController;
 import pruebajavafx.dto.UsuariosDto;
+import pruebajavafx.services.UsuariosService;
 
 /**
  *
@@ -30,9 +32,11 @@ import pruebajavafx.dto.UsuariosDto;
 public class UsuarioHBox extends HBox{
     
     private UsuariosDto usuario;
+    private UsuariosViewController usuariosViewController;
 
-    public UsuarioHBox(UsuariosDto usuario) {
+    public UsuarioHBox(UsuariosDto usuario, UsuariosViewController usuariosViewController) {
         this.usuario = usuario;
+        this.usuariosViewController = usuariosViewController;
         
         this.setStyle(HBoxStyles());
         this.setPrefHeight(80);
@@ -162,6 +166,8 @@ public class UsuarioHBox extends HBox{
             UsuariosEditarController usuariosEditarController = loader.getController();
             
             usuariosEditarController.EstablecerModalidad("Editar");
+            usuariosEditarController.setUsuarioEditar(usuario);
+            usuariosEditarController.setUsuariosViewController(usuariosViewController);
                     
             Scene scene = new Scene(root);
             Stage stage = new Stage();
@@ -181,7 +187,14 @@ public class UsuarioHBox extends HBox{
         alert.setContentText("¿Esta seguro de ELIMINAR el usuario: "+usuario.getUsuNombre()+"?");
         Optional<ButtonType> action = alert.showAndWait();
         if (action.get() == ButtonType.OK) {
-            
+            UsuariosService usuarioService = new UsuariosService();
+            Respuesta res = usuarioService.deleteUsuario(usuario.getUsuId());
+            if(res.getEstado()){
+                Mensaje.showAndWait(Alert.AlertType.INFORMATION, "Eliminar Usuario", "El usuario ha sido eliminado de manera exitosa");
+                usuariosViewController.cargarDatos("");
+            }else{
+                Mensaje.showAndWait(Alert.AlertType.ERROR, "Eliminar Usuario", "Surgio un error al eliminar el usuario, intenta luego");
+            }
         }
     }
     

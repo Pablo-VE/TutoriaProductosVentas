@@ -55,6 +55,8 @@ public class UsuariosEditarController implements Initializable {
     private UsuariosService usuarioService;
     
     private MailManager mailManager;
+    
+    private UsuariosDto usuarioEditar;
     /**
      * Initializes the controller class.
      */
@@ -84,6 +86,22 @@ public class UsuariosEditarController implements Initializable {
         }else{
             lblTitulo.setText("Editar Usuario");
         }
+    }
+    
+    public void setUsuarioEditar(UsuariosDto usuario){
+        this.usuarioEditar = usuario;
+        txtNombre.setText(usuarioEditar.getUsuNombre());
+        txtCorreo.setText(usuarioEditar.getUsuUsuario());
+        if(usuarioEditar.getUsuRol().equals("A")){
+            cbxRol.setValue("Administrador");
+            rol = "A";
+        }else{
+            cbxRol.setValue("Cajero");
+            rol = "C";
+        }
+        
+        txtNombre.setDisable(true);
+        txtCorreo.setDisable(true);
     }
     
     public void setUsuariosViewController(UsuariosViewController controller){
@@ -120,8 +138,7 @@ public class UsuariosEditarController implements Initializable {
                 Respuesta res = usuarioService.saveUsuario(usuario);
                 
                 if(res.getEstado()){
-//                    mailManager.SendMailOnlyText(correo, "Bienvenido a Pali", "Bienvenido "+nombre+" a nuestra empresa, se te ha creado una cuenta con el correo: "+correo+" y la contraseña "+password+" . Por favor, cuando ingreses cambiar la contraseña por una de tu agrado, para mayor seguridad.");
-//                    mailManager.SendMailTextWithHTML(correo, "Bienvenido a Pali", nombre, password);
+                    mailManager.SendMailTextWithHTML(correo, "Bienvenido a Pali", nombre, password);
                     Mensaje.showAndWait(Alert.AlertType.INFORMATION, "Registro de Usuario", "El usuario ha sido creado de manera exitosa");
                     usuariosViewController.cargarDatos("");
                     closeStage();
@@ -130,6 +147,16 @@ public class UsuariosEditarController implements Initializable {
                 }
             }else{
                 //Editar
+                usuarioEditar.setUsuRol(rol);
+                Respuesta res = usuarioService.saveUsuario(usuarioEditar);
+                if(res.getEstado()){
+                    mailManager.SendMailChangeRol(usuarioEditar.getUsuUsuario(), "Nuevo rol asignado", usuarioEditar.getUsuNombre(), cbxRol.getValue());
+                    Mensaje.showAndWait(Alert.AlertType.INFORMATION, "Edicion de Usuario", "El usuario ha sido editado de manera exitosa");
+                    usuariosViewController.cargarDatos("");
+                    closeStage();
+                }else{
+                    Mensaje.showAndWait(Alert.AlertType.ERROR, "Edicion de Usuario", "Ha surgido un error al editar el usuario, intenta luego.");
+                }
             }
         }else{
             Mensaje.showAndWait(Alert.AlertType.WARNING, "Opps :(", "Hay campos vacios");

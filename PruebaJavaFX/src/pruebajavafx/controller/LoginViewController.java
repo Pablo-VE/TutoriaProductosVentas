@@ -89,8 +89,6 @@ public class LoginViewController implements Initializable {
             stage.setResizable(false);
             stage.setTitle("Supemercados Pali");
             stage.show();
-            
-//            GeneratePDF.CreatePDFWithOnlyParagraph("login", "Usuario: "+usuario.getUsuNombre());
         }catch(Exception e){
             System.out.println("Error: Controller - LoginViewController - Ingresar()");
         }

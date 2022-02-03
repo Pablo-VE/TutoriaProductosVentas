@@ -12,10 +12,14 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.MenuButton;
+import javafx.scene.control.MenuItem;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.StackPane;
+import javafx.stage.Stage;
 import pruebajavafx.dto.UsuariosDto;
 import pruebajavafx.utils.AppContext;
 
@@ -35,11 +39,15 @@ public class HelloWorldController implements Initializable {
     @FXML
     private Button btnVentas;
     @FXML
-    private Label lblNombreUsuario;
-    @FXML
     private AnchorPane apInicio;
     @FXML
     private Button btnUsuarios;
+    @FXML
+    private MenuButton btnUsuarioLogeado;
+    @FXML
+    private MenuItem btnVerPerfil;
+    @FXML
+    private MenuItem btnCerrarSesion;
     
     
 
@@ -49,7 +57,7 @@ public class HelloWorldController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         UsuariosDto usuario = (UsuariosDto) AppContext.getInstance().get("usuarioLogeado");
-        lblNombreUsuario.setText(usuario.getUsuNombre());
+        btnUsuarioLogeado.setText(usuario.getUsuNombre());
         
         if(!usuario.getUsuRol().equals("A")){
             btnUsuarios.setDisable(true);
@@ -96,6 +104,37 @@ public class HelloWorldController implements Initializable {
             spContenedor.getChildren().remove(apInicio);
         }catch(Exception e){
             System.out.println("Error: Controller - HelloWorldController - actGoUsuarios");
+        }
+    }
+
+    @FXML
+    private void actVerPerfil(ActionEvent event) {
+        try{
+            Parent root = FXMLLoader.load(getClass().getResource("../views/PerfilView.fxml"));
+            spContenedor.getChildren().clear();
+            spContenedor.getChildren().add(root);
+            spContenedor.getChildren().remove(apInicio);
+        }catch(Exception e){
+            System.out.println("Error: Controller - HelloWorldController - actVerPerfil");
+        }
+    }
+
+    @FXML
+    private void actCerrarSesion(ActionEvent event) {
+        try{
+            
+            Stage stageActual =  (Stage) btnUsuarioLogeado.getScene().getWindow();
+            stageActual.close();
+            
+            Parent root = FXMLLoader.load(getClass().getResource("../views/LoginView.fxml"));
+            Scene scene = new Scene(root);
+            Stage stage = new Stage();
+            stage.setScene(scene);
+            stage.setTitle("Supermecados Pali - Inicio");
+            stage.setResizable(false);
+            stage.show();
+        }catch(Exception e){
+            System.out.println("Error: Controller - HelloWorldController - actGoVentas");
         }
     }
     

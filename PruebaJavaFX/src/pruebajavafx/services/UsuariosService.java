@@ -74,4 +74,29 @@ public class UsuariosService {
             return new Respuesta(false, "No se pudo guardar el registro", "");
         }
     }
+    
+    public Respuesta deleteUsuario(Long id){
+        try{
+            et = em.getTransaction();
+            et.begin();
+            PvUsuarios usuarioBd;
+            if(id != null && id > 0){ 
+                usuarioBd = em.find(PvUsuarios.class, BigDecimal.valueOf(id));
+                if(usuarioBd == null){
+                    et.rollback();
+                    return new Respuesta(false, "Eliminar registro", "No se encontro el producto a eliminar");
+                }
+                em.remove(usuarioBd);
+            }else{
+                et.rollback();
+                return new Respuesta(false, "Eliminar registro", "Debe cargar el producto a eliminar");
+            }
+            et.commit();
+            return new Respuesta(true, "", "");
+        }catch(Exception ex){
+            et.rollback();
+            System.out.println(ex);
+            return new Respuesta(false, "No se pudo eliminar el registro", "");
+        }
+    }
 }

@@ -64,7 +64,7 @@ public class UsuariosViewController implements Initializable {
             vbContenedor.getChildren().clear();
             
             for(int i=0; i<usuarios.size(); i++){
-                UsuarioHBox usuHbox = new UsuarioHBox(usuarios.get(i));
+                UsuarioHBox usuHbox = new UsuarioHBox(usuarios.get(i), this);
                 vbContenedor.getChildren().add(usuHbox);
             }
             
